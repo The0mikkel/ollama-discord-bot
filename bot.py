@@ -1,16 +1,16 @@
+# Build in imports
 import io
 import os
 import json
 import asyncio
 import argparse
-from datetime import datetime, timedelta
+from logging import getLogger
+import random
 
+# External imports
 import ollama
 import discord
 import redis
-import random
-
-from logging import getLogger
 
 # piggy back on the logger discord.py set up
 logging = getLogger('discord.bot')
@@ -102,7 +102,7 @@ class Bot:
       logging.info('Message saved for context in guild %s, but it was not for us', message.channel.guild.name)
       
       # However, if randomly it does accept the message, and respond. There is a 0.01% chance of it happening.
-      if random.random() > 0.0001:
+      if (random.random() * 1000) > 0.1:
         return
 
     content = message.content.replace(f'<@{self.discord.user.id}>', self.bot_name.title()).strip()
