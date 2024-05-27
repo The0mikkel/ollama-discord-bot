@@ -1,0 +1,10 @@
+name: PR format test - Conventional commits
+
+on:
+  pull_request:
+    types: [opened, synchronize, edited, reopened]
+
+jobs:
+  pr-linter:
+    name: Pull Request title check
+    uses: the0mikkel/ci/.github/workflows/pr-test-conventionalcommits.yml@v1.1.4

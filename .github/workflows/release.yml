@@ -9,3 +9,11 @@ jobs:
     release:
         name: Release
         uses: the0mikkel/ci/.github/workflows/semver-release.yml@v1.1.4
+
+    docker:
+        name: Docker
+        needs: 
+            - release
+        uses: the0mikkel/ci/.github/workflows/docker.yml@v1.1.4
+        with:
+            semver: ${{ needs.release.outputs.version }}
