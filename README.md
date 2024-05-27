@@ -7,9 +7,10 @@ This Discord chatbot is built to follow the chat flow and have a conversation wi
 0. Have [Ollama](https://ollama.com) and [Docker](https://docker.com) installed and running
 1. Clone the repository
 2. Configure the `.env` file with at least the following variables (see [Configuration](#configuration) for more options):
-    - `DISCORD_TOKEN`: The token of the discord bot
+    - `DISCORD_TOKEN`: The token of the discord bot (token can be obtained from the [Discord Developer Portal](https://discord.com/developers/applications))
     - `ADMIN_ID`: The id of the admin user, which allows to RESET the chat
 3. Run `docker-compose up -d` to start the bot
+4. A link will be available when the bot is running, which can be used to invite the bot to a server
 
 *This will use the Ollama installed and running on your system. This will therefore allow for people to use ressources on your machine. If you want to use a different Ollama instance, you can set the `OLLAMA_SCHEME`, `OLLAMA_HOST` and `OLLAMA_PORT` variables in the `.env` file.*
 
@@ -63,3 +64,15 @@ To use custom models, it is possible to set the `OLLAMA_MODEL` environment varia
 It is **recommended** to use a custom model, to get the best chatting experience. The default model is not trained on the chat flow, and may not generate good responses.
 
 You can use [OpenWebUI](https://github.com/open-webui/open-webui) to configure and interact with the Ollama API. It is also a nice web panel for the system, if you were looking for a web-specific system.
+
+## Credits
+
+This is based on [mxyng/discollama](https://github.com/mxyng/discollama), but is heavily modified to fit the needs of a chatbot, rather than a response generator.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Author
+
+This project is made by [Mikkel Albrechtsen](https://github.com/the0mikkel).

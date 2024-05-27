@@ -1,0 +1,6 @@
+# Ignore everything
+*
+
+# Except for these files
+!/requirements.txt
+!/bot.py
