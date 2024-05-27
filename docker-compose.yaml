@@ -1,5 +1,7 @@
 version: '3'
 services:
+  # If you want Ollama to run in docker, this can be used. 
+  # Have only been tested to run on CPU, not GPU.
   # ollama:
   #   container_name: ollama
   #   image: ollama/ollama
