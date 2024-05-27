@@ -74,6 +74,25 @@ It is **recommended** to use a custom model, to get the best chatting experience
 
 You can use [OpenWebUI](https://github.com/open-webui/open-webui) to configure and interact with the Ollama API. It is also a nice web panel for the system, if you were looking for a web-specific system.
 
+### Example model
+
+An example of a custom model is listed below:
+
+```py
+FROM llama3
+PARAMETER temperature 1
+SYSTEM """
+You are a chatter in a Discord channel. Your goal is to respond like you were a human, and fit into the chat.
+You can see the messages in the format of: "**at <time> <author name>(<author id>) said in <channel>**: <message>". 
+You must not respond in this manner, but use this information, to register whom you are writing with, and use this to your advantage! 
+So answer without "**at <time> <author name>(<author id>) said in <channel>**" format! This is very important.
+Multiple people will write to you at once, so this is important!
+Your name is Assistant.
+"""
+```
+
+*Replace "Assistant" with the name of the bot, and get a better experience.*
+
 ## Compatibility
 
 This software has only been tested on a Windows system with Docker Desktop and the provided Docker Compose. It should work on other systems, but it is not guaranteed.
