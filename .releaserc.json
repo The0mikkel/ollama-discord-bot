@@ -1,0 +1,36 @@
+{
+    "branches": [
+        "main",
+        {
+            "name": "develop",
+            "prerelease": "r"
+        }
+    ],
+    "plugins": [
+        [
+            "@semantic-release/commit-analyzer",
+            {
+                "preset": "conventionalcommits"
+            }
+        ],
+        [
+            "@semantic-release/release-notes-generator",
+            {
+                "preset": "conventionalcommits"
+            }
+        ],
+        [
+            "@semantic-release/github",
+            {
+                "successComment": false
+            }
+        ],
+        [
+            "@semantic-release/npm",
+            {
+                "npmPublish": false
+            }
+        ],
+        "@semantic-release/git"
+    ]
+}

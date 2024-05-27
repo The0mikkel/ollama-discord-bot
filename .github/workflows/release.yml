@@ -1,0 +1,11 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+    release:
+        name: Release
+        uses: the0mikkel/ci/.github/workflows/semver-release.yml@v1.1.4

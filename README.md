@@ -73,6 +73,13 @@ This is based on [mxyng/discollama](https://github.com/mxyng/discollama), but is
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+## Contributing
+
+If you want to contribute to this project, you are more than welcome.  
+However, the project does use [semver](https://semver.org) for versioning, and the [conventional commits](https://www.conventionalcommits.org) for commit messages throug [semantic-release](https://github.com/semantic-release/semantic-release).
+
+Please see the [CONTRIBUTING](CONTRIBUTING.md) file for more information.
+
 ## Author
 
 This project is made by [Mikkel Albrechtsen](https://github.com/the0mikkel).

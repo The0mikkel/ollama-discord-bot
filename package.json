@@ -1,0 +1,19 @@
+{
+  "name": "ollama-discord-bot",
+  "version": "1.0.0",
+  "description": "This Discord chatbot is built to follow the chat flow and have a conversation with the user. The bot is built using the discord.py library, and the chat is stored in Redis. The number of messages to have in context is configurable.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@semantic-release/commit-analyzer": "^12.0.0",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^10.0.5",
+    "@semantic-release/npm": "^12.0.1",
+    "@semantic-release/release-notes-generator": "^13.0.0",
+    "conventional-changelog-conventionalcommits": "^8.0.0"
+  }
+}
