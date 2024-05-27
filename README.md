@@ -65,6 +65,10 @@ It is **recommended** to use a custom model, to get the best chatting experience
 
 You can use [OpenWebUI](https://github.com/open-webui/open-webui) to configure and interact with the Ollama API. It is also a nice web panel for the system, if you were looking for a web-specific system.
 
+## Compatibility
+
+This software has only been tested on a Windows system with Docker Desktop and the provided Docker Compose. It should work on other systems, but it is not guaranteed.
+
 ## Credits
 
 This is based on [mxyng/discollama](https://github.com/mxyng/discollama), but is heavily modified to fit the needs of a chatbot, rather than a response generator.
