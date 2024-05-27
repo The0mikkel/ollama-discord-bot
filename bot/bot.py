@@ -14,9 +14,6 @@ from logging import getLogger
 
 # piggy back on the logger discord.py set up
 logging = getLogger('discord.bot')
-chat_max_length = 500
-admin_id = ""
-ctx = 4096
 
 class DiscordResponse:
   def __init__(self, message):
@@ -49,12 +46,15 @@ class DiscordResponse:
 
 
 class Bot:
-  def __init__(self, ollama, discord, redis, model, admin_id):
+  def __init__(self, ollama, discord, redis, model, admin_id, bot_name, chat_max_length=500, ctx=4096):
     self.ollama = ollama
     self.discord = discord
     self.redis = redis
     self.model = model
     self.admin_id = admin_id
+    self.bot_name = bot_name
+    self.chat_max_length = chat_max_length
+    self.ctx = ctx
     self.ready = False
 
     # register event handlers
@@ -65,7 +65,7 @@ class Bot:
     # pull the model
     # await self.ollama.pull(self.model)
     
-    activity = discord.Activity(name='Status', state='Hi, I\'m mike! I only respond to mentions.', type=discord.ActivityType.custom)
+    activity = discord.Activity(name='Status', state=f'Hi, I\'m {self.bot_name.title()}! I only respond to mentions.', type=discord.ActivityType.custom)
     await self.discord.change_presence(activity=activity)
 
     logging.info(
@@ -105,7 +105,7 @@ class Bot:
       if random.random() > 0.0001:
         return
 
-    content = message.content.replace(f'<@{self.discord.user.id}>', 'Mike').strip()
+    content = message.content.replace(f'<@{self.discord.user.id}>', self.bot_name.title()).strip()
     if not content:
       return
       
@@ -151,7 +151,7 @@ class Bot:
       local_messages = await self.load_channel(channel_id)
       
       response_message = ''
-      data = await self.ollama.chat(model=self.model, keep_alive=-1, stream=False, messages=local_messages, options={'num_ctx': ctx})
+      data = await self.ollama.chat(model=self.model, keep_alive=-1, stream=False, messages=local_messages, options={'num_ctx': self.ctx})
       
       response_message = data['message']['content']
       await self.save_message(channel_id, response_message, 'assistant')      
@@ -183,7 +183,7 @@ class Bot:
     messages = await self.load_channel(channel_id)
     
     # If above max chat entries, remove the oldest
-    if len(messages) > chat_max_length:
+    if len(messages) > self.chat_max_length:
       messages.pop(0)
     
     # Append new message
@@ -214,6 +214,10 @@ def main():
   parser.add_argument('--redis-port', default=os.getenv('REDIS_PORT', 6379), type=int)
   
   parser.add_argument('--admin-id', default=os.getenv('ADMIN_ID', ''), type=str)
+  
+  parser.add_argument('--bot-name', default=os.getenv('BOT_NAME', 'assistant'), type=str)
+  parser.add_argument('--chat-max-length', default=os.getenv('CHAT_MAX_LENGTH', 500), type=int)
+  parser.add_argument('--ctx', default=os.getenv('CTX', 2048), type=int)
 
   parser.add_argument('--buffer-size', default=32, type=int)
 
@@ -227,7 +231,10 @@ def main():
     discord.Client(intents=intents),
     redis.Redis(host=args.redis_host, port=args.redis_port, db=0, decode_responses=True),
     model=args.ollama_model,
-    admin_id = args.admin_id
+    admin_id = args.admin_id,
+    bot_name = args.bot_name,
+    chat_max_length=args.chat_max_length,
+    ctx=args.ctx,
   ).run(os.environ['DISCORD_TOKEN'])
 
 
