@@ -16,7 +16,7 @@ from logging import getLogger
 logging = getLogger('discord.bot')
 chat_max_length = 500
 admin_id = ""
-ready = False
+ctx = 4096
 
 class DiscordResponse:
   def __init__(self, message):
@@ -49,13 +49,12 @@ class DiscordResponse:
 
 
 class Bot:
-  def __init__(self, ollama, discord, redis, model, admin_id, prompt):
+  def __init__(self, ollama, discord, redis, model, admin_id):
     self.ollama = ollama
     self.discord = discord
     self.redis = redis
     self.model = model
     self.admin_id = admin_id
-    self.prompt = prompt
     self.ready = False
 
     # register event handlers
@@ -64,7 +63,7 @@ class Bot:
 
   async def on_ready(self):    
     # pull the model
-    await self.ollama.pull(self.model)
+    # await self.ollama.pull(self.model)
     
     activity = discord.Activity(name='Status', state='Hi, I\'m mike! I only respond to mentions.', type=discord.ActivityType.custom)
     await self.discord.change_presence(activity=activity)
@@ -125,8 +124,6 @@ class Bot:
     
     # Create response
     r = DiscordResponse(message)
-    # if r.channel.type == discord.ChannelType.text:
-    #   await r.write('**Starting chat...**\n')
     
     task = asyncio.create_task(self.thinking(message))
     
@@ -144,7 +141,6 @@ class Bot:
 
   async def thinking(self, message, timeout=999):
     try:
-      # await message.add_reaction('🤔')
       async with message.channel.typing():
         await asyncio.sleep(timeout)
     except Exception:
@@ -153,10 +149,9 @@ class Bot:
   async def chat(self, channel_id):
     try:
       local_messages = await self.load_channel(channel_id)
-      local_messages.append({'role': 'system', 'content': self.prompt})
       
       response_message = ''
-      data = await self.ollama.chat(model=self.model, keep_alive=-1, stream=False, messages=local_messages)
+      data = await self.ollama.chat(model=self.model, keep_alive=-1, stream=False, messages=local_messages, options={'num_ctx': ctx})
       
       response_message = data['message']['content']
       await self.save_message(channel_id, response_message, 'assistant')      
@@ -167,8 +162,8 @@ class Bot:
       return 'I am sorry, I am unable to respond at the moment.'
   
   async def load_channel(self, channel_id):
-    ctx = self.redis.get(f'discollama:channel:{channel_id}')
-    return json.loads(ctx) if ctx else []
+    redis_content = self.redis.get(f'discollama:channel:{channel_id}')
+    return json.loads(redis_content) if redis_content else []
   
   async def flush_channel(self, channel_id):
     self.redis.delete(f'discollama:channel:{channel_id}')
@@ -219,8 +214,6 @@ def main():
   parser.add_argument('--redis-port', default=os.getenv('REDIS_PORT', 6379), type=int)
   
   parser.add_argument('--admin-id', default=os.getenv('ADMIN_ID', ''), type=str)
-  
-  parser.add_argument('--prompt', default='Hi, I\'m mike! An AI chatbot on Discord.', type=str)
 
   parser.add_argument('--buffer-size', default=32, type=int)
 
@@ -234,8 +227,7 @@ def main():
     discord.Client(intents=intents),
     redis.Redis(host=args.redis_host, port=args.redis_port, db=0, decode_responses=True),
     model=args.ollama_model,
-    admin_id = args.admin_id,
-    prompt=args.prompt
+    admin_id = args.admin_id
   ).run(os.environ['DISCORD_TOKEN'])
 
 

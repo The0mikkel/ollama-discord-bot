@@ -1,20 +1,20 @@
 version: '3'
 services:
-  ollama:
-    container_name: ollama
-    image: ollama/ollama
-    # restart: always
-    volumes:
-      - ollama:/root/.ollama
-    networks:
-      - ollama
-    expose:
-      - 11434
-    healthcheck:
-      test: "bash -c 'cat < /dev/null > /dev/tcp/localhost/11434'"
-      interval: 30s
-      timeout: 10s
-      retries: 5
+  # ollama:
+  #   container_name: ollama
+  #   image: ollama/ollama
+  #   # restart: always
+  #   volumes:
+  #     - ollama:/root/.ollama
+  #   networks:
+  #     - ollama
+  #   expose:
+  #     - 11434
+  #   healthcheck:
+  #     test: "bash -c 'cat < /dev/null > /dev/tcp/localhost/11434'"
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 5
 
   bot:
     container_name: bot
@@ -28,11 +28,13 @@ services:
     networks:
       - ollama
       - redis
+    extra_hosts:
+      - host.docker.internal:host-gateway
     depends_on:
       redis:
         condition: service_healthy
-      ollama:
-        condition: service_healthy
+      # ollama:
+      #   condition: service_healthy
 
 
   redis:
