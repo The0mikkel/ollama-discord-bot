@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "discollama"
+version = "0.1.0"
+description = ""
+authors = ["Michael Yang <mxyng@pm.me>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+discord-py = "^2.3.1"
+redis = "^5.0.1"
+ollama = "^0.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 999
+indent-width = 2
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "space"
+
+[tool.ruff.lint]
+select = ["E", "F", "B"]
+ignore = ["E501"]

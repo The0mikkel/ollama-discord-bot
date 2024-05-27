@@ -1,0 +1,60 @@
+version: '3'
+services:
+  ollama:
+    container_name: ollama
+    image: ollama/ollama
+    # restart: always
+    volumes:
+      - ollama:/root/.ollama
+    networks:
+      - ollama
+    expose:
+      - 11434
+    healthcheck:
+      test: "bash -c 'cat < /dev/null > /dev/tcp/localhost/11434'"
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  bot:
+    container_name: bot
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    stop_grace_period: 1s
+    env_file:
+      - bot.env
+    networks:
+      - ollama
+      - redis
+    depends_on:
+      redis:
+        condition: service_healthy
+      ollama:
+        condition: service_healthy
+
+
+  redis:
+    container_name: redis
+    image: redis/redis-stack-server:latest
+    restart: always
+    volumes:
+      - redis:/data
+    networks:
+      - redis
+    expose:
+      - 6379
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+networks:
+  redis:
+  ollama:
+
+volumes:
+  redis:
+  ollama:
