@@ -39,7 +39,13 @@ class DiscordResponse:
       logging.info('Empty response, not sending')
       value = '*I don\'t have anything to say.*'
 
-    self.r = await self.channel.send(value, reference=message)
+    self.r = await self.channel.send(self.sanitize(value), reference=message)
+    
+  def sanitize(self, s):
+    step1 = s.replace('@everyone', '@\u200beveryone').replace('@here', '@\u200bhere')
+    step2 = discord.utils.escape_mentions(step1)
+    
+    return step2
 
 
 class Bot:
