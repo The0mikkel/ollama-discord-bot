@@ -14,6 +14,15 @@ This Discord chatbot is built to follow the chat flow and have a conversation wi
 
 *This will use the Ollama installed and running on your system. This will therefore allow for people to use ressources on your machine. If you want to use a different Ollama instance, you can set the `OLLAMA_SCHEME`, `OLLAMA_HOST` and `OLLAMA_PORT` variables in the `.env` file.*
 
+### Running used pre-built image
+
+The project provides a pre-built image, which can be used to run the bot. This is useful if you do not want to build the image yourself.
+
+Image is available at `ghcr.io/the0mikkel/ollama-discord-bot:latest`.
+
+A provided [docker-compose.prod.yml](docker-compose.prod.yml) file can be used to run the bot using the pre-built image.  
+Just copy it to `docker-compose.yml` and run `docker-compose up -d`.
+
 ## Features
 
 The bot listen in and is able to have a conversation with the user. The bot has the whole chat flow of a single channel. This means, even though the bot is not interacted with, it can be called in, and have the previous messages in context.
