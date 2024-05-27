@@ -89,7 +89,7 @@ class Bot:
   async def on_message(self, message):
     if not self.ready:
       return
-    
+        
     string_channel_id = str(message.channel.id)
     
     if self.discord.user == message.author:
@@ -108,7 +108,14 @@ class Bot:
     content = message.content.replace(f'<@{self.discord.user.id}>', self.bot_name.title()).strip()
     if not content:
       return
-      
+    
+    # Do not respond with llm in private messages
+    if isinstance(message.channel, discord.DMChannel):
+      response = DiscordResponse(message)
+      await response.write(message, 'I am sorry, I am unable to respond in private messages.')
+      return
+    
+    # Admin commands
     if content == 'RESET' and str(message.author.id) == self.admin_id:
       await self.flush_channel(str(message.channel.id))
       logging.info('Chat reset by admin in guild %s', message.channel.guild.name)
