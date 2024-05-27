@@ -1,6 +1,6 @@
 {
   "name": "ollama-discord-bot",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "This Discord chatbot is built to follow the chat flow and have a conversation with the user. The bot is built using the discord.py library, and the chat is stored in Redis. The number of messages to have in context is configurable.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
