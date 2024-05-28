@@ -15,7 +15,7 @@ For general commits, follow descriptive commit messages that succinctly describe
 Reference any related issues or pull requests in your commits using appropriate keywords (e.g., "Fix #123").
 4. **Code Style:** Maintain consistent code style and formatting as per the existing project standards.
 5. **Testing:** Ensure new code is accompanied by relevant tests where applicable.
-6. **Pull Requests:** Submit a pull request against the `develop` branch. Provide a clear description of your changes, ensuring it aligns with the outlined issue or feature request. The title of the PR must be in the fomrat of the [Conventional Commits format](https://www.conventionalcommits.org/en/v1.0.0/).
+6. **Pull Requests:** Submit a pull request against the `develop` branch. Provide a clear description of your changes, ensuring it aligns with the outlined issue or feature request. The title of the PR must be in the format of the [Conventional Commits format](https://www.conventionalcommits.org/en/v1.0.0/).
 
 ### Versioning Guidelines
 
