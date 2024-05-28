@@ -15,7 +15,7 @@ For general commits, follow descriptive commit messages that succinctly describe
 Reference any related issues or pull requests in your commits using appropriate keywords (e.g., "Fix #123").
 4. **Code Style:** Maintain consistent code style and formatting as per the existing project standards.
 5. **Testing:** Ensure new code is accompanied by relevant tests where applicable.
-6. **Pull Requests:** Submit a pull request against the `develop` branch. Provide a clear description of your changes, ensuring it aligns with the outlined issue or feature request.
+6. **Pull Requests:** Submit a pull request against the `develop` branch. Provide a clear description of your changes, ensuring it aligns with the outlined issue or feature request. The title of the PR must be in the fomrat of the [Conventional Commits format](https://www.conventionalcommits.org/en/v1.0.0/).
 
 ### Versioning Guidelines
 
@@ -29,7 +29,10 @@ The project adheres to [semantic versioning](https://semver.org/) principles:
 
 the project uses [semantic-release](https://github.com/semantic-release/semantic-release) for versioning and releases. Upon merging changes into the `main` branch, semantic-release generates new versions and publishes them. Merges to `develop` creates pre-releases.
 
-Commit messages follow this format for automated versioning: `<type>(<category>): <message>`
+Commit messages follow this format for automated versioning: `<type>(<category>): <message>`  
+*This follows the [Conventional Commits format](https://www.conventionalcommits.org/en/v1.0.0/)*
+
+To learn more about this, see the [Conventional Commits format](https://www.conventionalcommits.org/en/v1.0.0/)
 
 #### Commit Types:
 
