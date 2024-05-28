@@ -46,12 +46,13 @@ class DiscordResponse:
 
 
 class Bot:
-  def __init__(self, ollama, discord, redis, model, admin_id, bot_name, chat_max_length=500, ctx=4096):
+  def __init__(self, ollama, discord, redis, model, admin_id, chat_channel_id, bot_name, chat_max_length=500, ctx=4096):
     self.ollama = ollama
     self.discord = discord
     self.redis = redis
     self.model = model
     self.admin_id = admin_id
+    self.chat_channel_id = chat_channel_id
     self.bot_name = bot_name
     self.chat_max_length = chat_max_length
     self.ctx = ctx
@@ -105,6 +106,10 @@ class Bot:
       return
         
     string_channel_id = str(message.channel.id)
+    
+    if self.chat_channel_id:
+      if string_channel_id != self.chat_channel_id:
+        return
     
     if self.discord.user == message.author:
       # don't respond to ourselves
@@ -242,6 +247,7 @@ def main():
   parser.add_argument('--redis-port', default=os.getenv('REDIS_PORT', 6379), type=int)
   
   parser.add_argument('--admin-id', default=os.getenv('ADMIN_ID', ''), type=str)
+  parser.add_argument('--chat-channel-id', default=os.getenv('CHAT_CHANNEL_ID', ''), type=str)
   
   parser.add_argument('--bot-name', default=os.getenv('BOT_NAME', 'assistant'), type=str)
   parser.add_argument('--chat-max-length', default=os.getenv('CHAT_MAX_LENGTH', 500), type=int)
@@ -260,6 +266,7 @@ def main():
     redis.Redis(host=args.redis_host, port=args.redis_port, db=0, decode_responses=True),
     model=args.ollama_model,
     admin_id = args.admin_id,
+    chat_channel_id = args.chat_channel_id,
     bot_name = args.bot_name,
     chat_max_length=args.chat_max_length,
     ctx=args.ctx,
