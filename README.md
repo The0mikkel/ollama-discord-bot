@@ -1,5 +1,7 @@
 # Ollama discord chatbot
 
+![GitHub license](https://img.shields.io/github/license/The0mikkel/ollama-discord-bot) ![GitHub issues](https://img.shields.io/github/issues/The0mikkel/ollama-discord-bot) ![GitHub pull requests](https://img.shields.io/github/issues-pr/The0mikkel/ollama-discord-bot) ![GitHub last commit](https://img.shields.io/github/last-commit/The0mikkel/ollama-discord-bot)
+
 This Discord chatbot is built to follow the chat flow and have a conversation with the user. The bot is built using the discord.py library, and the chat is stored in Redis. The number of messages to have in context is configurable.
 
 ## Installation
