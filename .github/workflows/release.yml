@@ -4,16 +4,44 @@ on:
   push:
     branches:
       - main
+      - develop
 
 jobs:
-    release:
-        name: Release
-        uses: the0mikkel/ci/.github/workflows/semver-release.yml@v1.1.4
+  release:
+    name: Release
+    uses: the0mikkel/ci/.github/workflows/semver-release.yml@v1.1.4
 
-    docker:
-        name: Docker
-        needs: 
-            - release
-        uses: the0mikkel/ci/.github/workflows/docker.yml@v1.1.4
-        with:
-            semver: ${{ needs.release.outputs.version }}
+  docker:
+    name: Docker
+    needs: 
+      - release
+    if: needs.release.outputs.version != '' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+    uses: the0mikkel/ci/.github/workflows/docker.yml@v1.1.4
+    with:
+      semver: ${{ needs.release.outputs.version }}
+
+  update-develop:
+    name: Update develop branch
+    runs-on: ubuntu-latest
+    needs: 
+        - release
+    if: needs.release.outputs.version != '' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Update development branch to latest release
+        if: github.ref == 'refs/heads/main'
+        run: >-
+          URL=$(gh pr create -B develop -H main --title 'Update develop to latest release' --body 'Merge main into develop to update the develop branch to the latest release version' --label version-update) &&
+          gh pr merge $URL -t "CI: Updated version to match newest version [skip ci]" -b "This was done automatically by the CI pipeline" --merge
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  docker-prerelease:
+    name: Docker pre-release
+    needs: 
+      - release
+    if: needs.release.outputs.version != '' && github.event_name == 'push' && github.ref == 'refs/heads/develop'
+    uses: the0mikkel/ci/.github/workflows/docker.yml@v1.1.4
+    with:
+      tags: type=raw,value=${{ needs.release.outputs.version }}
