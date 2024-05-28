@@ -21,7 +21,7 @@ jobs:
             semver: ${{ needs.release.outputs.version }}
 
     docker-prerelease:
-        name: Docker Prerelease
+        name: Docker pre-release
         needs: 
             - release
         if: needs.release.outputs.version != '' && github.event_name == 'push' && github.ref == 'refs/heads/develop'
