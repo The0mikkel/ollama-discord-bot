@@ -142,7 +142,10 @@ class Bot:
 
     # Write response
     # Truncate response if too long
-    await r.write(message, response[:2000])
+    try:
+      await r.write(message, response[:2000])
+    except Exception as e:
+      logging.error('Error sending response: %s', e)
     task.cancel()
     
 
