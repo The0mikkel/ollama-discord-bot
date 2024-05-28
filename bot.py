@@ -109,7 +109,15 @@ class Bot:
     if self.discord.user == message.author:
       # don't respond to ourselves
       return
+    
+    # Do not respond with llm in private messages
+    if isinstance(message.channel, discord.DMChannel):
+      response = DiscordResponse(message)
+      if self.discord.user.mentioned_in(message):
+        await response.write(message, 'I am sorry, I am unable to respond in private messages.')
+      return
 
+    # Do not respond to messages that don't mention us
     if not self.discord.user.mentioned_in(message) or message.author.bot or '@everyone' in message.content or '@here' in message.content:
       # don't respond to messages that don't mention us, but save it for context
       await self.save_message(str(message.channel.id), self.message(message, message.content), 'user')
@@ -119,14 +127,9 @@ class Bot:
       if (random.random() * 1000) > 0.1:
         return
 
+    # Clean message
     content = message.content.replace(f'<@{self.discord.user.id}>', self.bot_name.title()).strip()
     if not content:
-      return
-    
-    # Do not respond with llm in private messages
-    if isinstance(message.channel, discord.DMChannel):
-      response = DiscordResponse(message)
-      await response.write(message, 'I am sorry, I am unable to respond in private messages.')
       return
     
     # Admin commands
