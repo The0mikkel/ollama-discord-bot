@@ -107,6 +107,7 @@ class Bot:
         
     string_channel_id = str(message.channel.id)
     
+    # If CHAT_CHANNEL_ID is set, only respond in that channel.
     if self.chat_channel_id:
       if string_channel_id != self.chat_channel_id:
         return

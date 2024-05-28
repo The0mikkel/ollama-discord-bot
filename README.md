@@ -52,7 +52,7 @@ The bot can be configured by setting the following environment variables:
 - `REDIS_HOST`: The host for the Redis server.
 - `REDIS_PORT`: The port for the Redis server.
 - `ADMIN_ID`: The Discord ID of the admin user. This user will have the ability to reset the chat.
-- `CHAT_CHANNEL_ID`: The Discord ID of the channel the bot will chat in. Leave empty to allow chatting in all channels.
+- `CHAT_CHANNEL_ID`: The Discord ID of the specific channel where the bot will chat. By default, leave this empty to allow the bot to chat in all channels.
 - `BOT_NAME`: The name of the bot. This is used for the bot to recognize when it is mentioned in a message.
 - `CHAT_MAX_LENGTH`: The maximum length of the chat history to store in Redis. This is used to limit the amount of memory used by the bot.
 - `CTX`: The context length for the Ollama API. This determines how much of the chat history the bot will consider when generating a response.
