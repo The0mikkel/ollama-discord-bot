@@ -48,7 +48,7 @@ The bot can be configured by setting the following environment variables:
 
 - `DISCORD_TOKEN`: Your Discord bot token. This is required for the bot to connect to Discord.
 - `OLLAMA_SCHEME`: The scheme for the Ollama API (http or https).
-- `OLLAMA_HOST`: The host for the Ollama API.
+- `OLLAMA_HOST`: The host for the Ollama API. To use the Ollama API hosted on the host machine, use `host.docker.internal`. Default is `127.0.0.1`.
 - `OLLAMA_PORT`: The port for the Ollama API.
 - `OLLAMA_MODEL`: The model to use for the Ollama API.
 - `REDIS_HOST`: The host for the Redis server.
