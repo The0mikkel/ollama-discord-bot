@@ -84,7 +84,11 @@ class Bot:
     self.ready = True
 
   def message(self, message, content=''):
-    return f'**at {message.created_at.strftime("%Y-%m-%d %H:%M:%S")} {message.author.name}({message.author.id}) said in {message.channel.name}**: {content}'
+    said = "said"
+    if message.reference:
+      said = f'replied to {message.reference.message_id}'
+    
+    return f'**({message.id}) at {message.created_at.strftime("%Y-%m-%d %H:%M:%S")} {message.author.name}({message.author.id}) {said} in {message.channel.name}**: {content}'
 
   async def on_message(self, message):
     if not self.ready:
