@@ -84,11 +84,21 @@ class Bot:
     self.ready = True
 
   def message(self, message, content=''):
-    said = "said"
-    if message.reference:
-      said = f'replied to {message.reference.message_id}'
-    
-    return f'**({message.id}) at {message.created_at.strftime("%Y-%m-%d %H:%M:%S")} {message.author.name}({message.author.id}) {said} in {message.channel.name}**: {content}'
+    try:
+      said = "said"
+      if message.reference:
+        said = f'replied to {message.reference.message_id}'
+        
+      chat_name = "this chat"
+      try:
+        chat_name = message.channel.name
+      except Exception as e:
+        pass
+      
+      return f'**({message.id}) at {message.created_at.strftime("%Y-%m-%d %H:%M:%S")} {message.author.name}({message.author.id}) {said} in {chat_name}**: {content}'
+    except Exception as e:
+      logging.error('Error generating message: %s', e)
+      return ''
 
   async def on_message(self, message):
     if not self.ready:
@@ -103,7 +113,7 @@ class Bot:
     if not self.discord.user.mentioned_in(message) or message.author.bot or '@everyone' in message.content or '@here' in message.content:
       # don't respond to messages that don't mention us, but save it for context
       await self.save_message(str(message.channel.id), self.message(message, message.content), 'user')
-      logging.info('Message saved for context in guild %s, but it was not for us', message.channel.guild.name)
+      logging.info('Message saved for context in %s, but it was not for us', (message.channel.id))
       
       # However, if randomly it does accept the message, and respond. There is a 0.01% chance of it happening.
       if (random.random() * 1000) > 0.1:
@@ -122,11 +132,11 @@ class Bot:
     # Admin commands
     if content == 'RESET' and str(message.author.id) == self.admin_id:
       await self.flush_channel(str(message.channel.id))
-      logging.info('Chat reset by admin in guild %s', message.channel.guild.name)
+      logging.info('Chat reset by admin in %s', (message.channel.id))
       await self.save_message(string_channel_id, '*You joined the chat! - You joined ' + str(message.channel.guild.name) + '.*', 'assistant')
       return
     elif content == 'RESET' and str(message.author.id) != self.admin_id:
-      logging.info('Chat reset denied by user %s in guild %s', message.author.name, message.channel.guild.name)
+      logging.info('Chat reset denied by user %s in %s', message.author.name, (message.channel.id))
       content = message.author.name + ' tried to reset the chat, but was denied.'
 
     channel = message.channel
@@ -138,19 +148,20 @@ class Bot:
     
     task = asyncio.create_task(self.thinking(message))
     
-    # Save user message
-    await self.save_message(string_channel_id, self.message(message, content), 'user')
-    
-    # Generate text for response
-    response = await self.chat(string_channel_id)
-
-    # Write response
-    # Truncate response if too long
     try:
+      # Save user message
+      await self.save_message(string_channel_id, self.message(message, content), 'user')
+      
+      # Generate text for response
+      response = await self.chat(string_channel_id)
+
+      # Write response
+      # Truncate response if too long
       await r.write(message, response[:2000])
     except Exception as e:
       logging.error('Error sending response: %s', e)
-    task.cancel()
+    finally:
+      task.cancel()
     
 
   async def thinking(self, message, timeout=999):
