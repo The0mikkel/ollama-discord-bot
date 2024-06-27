@@ -21,28 +21,78 @@ class DiscordResponse:
     self.channel = message.channel
 
     self.r = None
-    self.sb = io.StringIO()
 
   async def write(self, message, s, end=''):
-    if self.sb.seek(0, io.SEEK_END) + len(s) + len(end) > 2000:
-      self.r = None
-      self.sb.seek(0, io.SEEK_SET)
-      self.sb.truncate()
 
-    self.sb.write(s)
-
-    value = self.sb.getvalue().strip()
+    value = self.sanitize(s)
     if not value:
       logging.info('Empty response, not sending')
       value = '*I don\'t have anything to say.*'
 
-    self.r = await self.channel.send(self.sanitize(value), reference=message)
+    # Reply with multiple messages if the response is too long. The first one should reference the original message.
+    i = 0
+    if len(value) >= 2000:
+      done = False
+      referenced = False
+      message_remaining = value
+
+      while not done:
+        i += 1
+        if i > 10:
+          logging.info('Too many chunks, stopping')
+          break
+        
+        # Find the last newline before the 2000 character limit
+        split_index = message_remaining.rfind('\n', 0, 2000)
+
+        # If there's no newline, just split at the 2000 character limit
+        if split_index == -1:
+            split_index = 2000
+            logging.info('Splitting at 2000 characters - no newline found')
+            
+            if len(message_remaining) <= 2000:
+              split_index = len(message_remaining)
+            
+        # Get the chunk to send
+        logging.info('Sending chunk of length %s, of %s', len(message_remaining[:split_index]), len(message_remaining))
+        chunk_to_send = message_remaining[:split_index]
+
+        if len(chunk_to_send) == 0 and len(message_remaining) > 0 and len(message_remaining) <= 2000:
+          chunk_to_send = message_remaining
+          done = True
+        if len(chunk_to_send) == 0:
+          done = True
+          logging.info('Empty chunk, stopping')
+          continue
+        
+        # Send the chunk here
+        if not referenced:
+          self.r = await self.channel.send(chunk_to_send, reference=message)
+          referenced = True
+        else:
+          await self.channel.send(chunk_to_send)
+
+        # Update the remaining message
+        message_remaining = message_remaining[split_index:]
+
+        # If there's nothing left to send, we're done
+        if len(message_remaining) == 0:
+            done = True
+            logging.info('No more message to send')
+            break
+            
+        # Wait a bit to avoid rate limiting
+        await asyncio.sleep(0.5)
+        
+    else:
+        await self.channel.send(value, reference=message)
     
-  def sanitize(self, s):
-    step1 = s.replace('@everyone', '@\u200beveryone').replace('@here', '@\u200bhere')
-    step2 = discord.utils.escape_mentions(step1)
+  def sanitize(self, message):
+    stripped = message.strip()
+    non_mentioned = stripped.replace('@everyone', '@\u200beveryone').replace('@here', '@\u200bhere')
+    escaped = discord.utils.escape_mentions(non_mentioned)
     
-    return step2
+    return escaped
 
 
 class Bot:
@@ -166,7 +216,8 @@ class Bot:
 
       # Write response
       # Truncate response if too long
-      await r.write(message, response[:2000])
+      await r.write(message, response)
+      await asyncio.sleep(0.5)
     except Exception as e:
       logging.error('Error sending response: %s', e)
     finally:

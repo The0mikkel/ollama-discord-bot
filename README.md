@@ -1,12 +1,14 @@
 # Ollama discord chatbot
 
+![GitHub license](https://img.shields.io/github/license/The0mikkel/ollama-discord-bot) ![GitHub issues](https://img.shields.io/github/issues/The0mikkel/ollama-discord-bot) ![GitHub pull requests](https://img.shields.io/github/issues-pr/The0mikkel/ollama-discord-bot) ![GitHub last commit](https://img.shields.io/github/last-commit/The0mikkel/ollama-discord-bot)
+
 This Discord chatbot is built to follow the chat flow and have a conversation with the user. The bot is built using the discord.py library, and the chat is stored in Redis. The number of messages to have in context is configurable.
 
 ## Installation
 
 0. Have [Ollama](https://ollama.com) and [Docker](https://docker.com) installed and running
 1. Clone the repository
-2. Configure the `.env` file with at least the following variables (see [Configuration](#configuration) for more options):
+2. Configure the `bot.env` file with at least the following variables (see [Configuration](#configuration) for more options):
     - `DISCORD_TOKEN`: The token of the discord bot (token can be obtained from the [Discord Developer Portal](https://discord.com/developers/applications))
     - `ADMIN_ID`: The id of the admin user, which allows to RESET the chat
 3. Run `docker-compose up -d` to start the bot
@@ -46,7 +48,7 @@ The bot can be configured by setting the following environment variables:
 
 - `DISCORD_TOKEN`: Your Discord bot token. This is required for the bot to connect to Discord.
 - `OLLAMA_SCHEME`: The scheme for the Ollama API (http or https).
-- `OLLAMA_HOST`: The host for the Ollama API.
+- `OLLAMA_HOST`: The host for the Ollama API. To use the Ollama API hosted on the host machine, use `host.docker.internal`. Default is `127.0.0.1`.
 - `OLLAMA_PORT`: The port for the Ollama API.
 - `OLLAMA_MODEL`: The model to use for the Ollama API.
 - `REDIS_HOST`: The host for the Redis server.
@@ -54,7 +56,7 @@ The bot can be configured by setting the following environment variables:
 - `ADMIN_ID`: The Discord ID of the admin user. This user will have the ability to reset the chat.
 - `CHAT_CHANNEL_ID`: The Discord ID of the specific channel where the bot will chat. Leave this empty to allow the bot to chat in all channels. (default is empty)
 - `BOT_NAME`: The name of the bot. This is used for the bot to recognize when it is mentioned in a message.
-- `CHAT_MAX_LENGTH`: The maximum length of the chat history to store in Redis. This is used to limit the amount of memory used by the bot.
+- `CHAT_MAX_LENGTH`: The maximum length of the chat history to store in Redis. This is used to limit the amount of memory used by the bot. (default is 500 messages)
 - `CTX`: The context length for the Ollama API. This determines how much of the chat history the bot will consider when generating a response.
 
 ## Security
