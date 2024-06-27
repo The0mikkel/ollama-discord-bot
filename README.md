@@ -8,7 +8,7 @@ This Discord chatbot is built to follow the chat flow and have a conversation wi
 
 0. Have [Ollama](https://ollama.com) and [Docker](https://docker.com) installed and running
 1. Clone the repository
-2. Configure the `.env` file with at least the following variables (see [Configuration](#configuration) for more options):
+2. Configure the `bot.env` file with at least the following variables (see [Configuration](#configuration) for more options):
     - `DISCORD_TOKEN`: The token of the discord bot (token can be obtained from the [Discord Developer Portal](https://discord.com/developers/applications))
     - `ADMIN_ID`: The id of the admin user, which allows to RESET the chat
 3. Run `docker-compose up -d` to start the bot
