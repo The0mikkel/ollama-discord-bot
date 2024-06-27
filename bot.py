@@ -238,8 +238,12 @@ class Bot:
       response_message = ''
       data = await self.ollama.chat(model=self.model, keep_alive=-1, stream=False, messages=local_messages, options={'num_ctx': self.ctx})
       
-      response_message = data['message']['content']
-      await self.save_message(channel_id, response_message, 'assistant')      
+      try:
+        response_message = data['message']['content']
+        await self.save_message(channel_id, response_message, 'assistant')      
+      except Exception as e:
+        logging.error('Error saving response: %s', e)
+        return 'I am sorry, I am unable to respond at the moment.'
         
       return response_message
     except Exception as e:
