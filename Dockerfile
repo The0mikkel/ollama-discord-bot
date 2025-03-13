@@ -1,4 +1,4 @@
-FROM python:3-alpine
+FROM python:3.13-alpine
 
 # Set environment variables to prevent Python from writing .pyc files to disk and buffering stdout and stderr
 ENV PYTHONDONTWRITEBYTECODE=1
